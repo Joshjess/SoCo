@@ -1,9 +1,10 @@
 package main
 
 import (
-	"backend/src/db_schema"
-	userRoutes "backend/src/routes/user"
-
+	"backend/db_schema"
+	CommentRoutes "backend/routes/comment"
+	PostRoutes "backend/routes/post"
+	UserRoutes "backend/routes/user"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,7 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&db_schema.User{}, &db_schema.Post{}, &db_schema.Comment{})
+	db.AutoMigrate(&db_schema.User{}, &db_schema.Post{}, &db_schema.Comment{}, db_schema.VotePost{}, db_schema.VoteComment{})
 
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
@@ -27,6 +28,8 @@ func main() {
 		})
 	})
 	v1 := r.Group("/v1")
-	userRoutes.AddUserRoutes(v1, db)
+	UserRoutes.AddUserRoutes(v1, db)
+	PostRoutes.AddPostRoutes(v1, db)
+	CommentRoutes.AddCommentRoutes(v1, db)
 	r.Run()
 }
