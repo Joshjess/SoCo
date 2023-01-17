@@ -6,6 +6,7 @@ import (
 	PostRoutes "backend/routes/post"
 	UserRoutes "backend/routes/user"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
@@ -13,7 +14,7 @@ import (
 )
 
 func main() {
-	dsn := "host=localhost user=postgres password=password123 dbname=postgres port=5432 sslmode=disable TimeZone=Europe/Amsterdam"
+	dsn := "host=" + os.Getenv("DATABASE_HOST") + " user=postgres password=password123 dbname=postgres port=5432 sslmode=disable TimeZone=Europe/Amsterdam"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")

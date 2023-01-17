@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appName }}-frontend
+  labels:
+    app: {{ .Values.appName }}-frontend
+spec:
+  ports:
+    - name: frontend-port
+      port: {{.values.frontendPort}}
+      targetPort: {{.values.frontendPort}}
+  #TODO: figure out what this does
+  selector:
+    io.kompose.service: frontend
+status:
+  loadBalancer: {}

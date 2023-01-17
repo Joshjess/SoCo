@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+spec:
+  rules:
+  - host: {{ .Values.service.url }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Values.appName }}-database
+          servicePort: 5432

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}-database
+  labels:
+    app: {{ .Values.appName }}-database
+spec:
+  replicas: {{ .Values.databaseDeployment.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}-database
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}-database
+    spec:
+      imagePullSecrets: {{ toYaml .Values.image.secrets }}
+      containers:
+        - name: {{ .Chart.Name }}-database
+          image: "{{ .Values.databaseDeoployment.image}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.databaseDeployment.containerPort }}
+              protocol: TCP
+      

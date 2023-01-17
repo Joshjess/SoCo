@@ -1,31 +1,25 @@
-FROM golang:alpine AS builder
+FROM golang:1.18-alpine AS builder
 
-RUN apk update && apk add --no-cache 'git=~2'
+WORKDIR /app
 
-ENV GO111MODULE=on
-WORKDIR $GOPATH/src/packages/goginapp/
-COPY . .
+COPY go* ./
+RUN go mod download
 
-# Fetch dependencies.
-# Using go get.
-RUN go get -d -v
+COPY . ./
 
-# Build the binary.
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/main .
+RUN go build -v -o backend
 
 FROM alpine:3
 
-WORKDIR /
-
 # Copy our static executable.
-COPY --from=builder /go/main /go/main
-COPY public /go/public
+COPY --from=builder /app/backend /app/backend
 
 ENV PORT 8080
 ENV GIN_MODE release
 EXPOSE 8080
 
-WORKDIR /go
+
+WORKDIR /app
 
 # Run the Go Gin binary.
-ENTRYPOINT ["/go/main"]
+ENTRYPOINT ["/app/backend"]
