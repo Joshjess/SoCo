@@ -1,27 +1,108 @@
-import { Link } from "react-router-dom";
+import { Button, Checkbox, Form, Input } from 'antd';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { useCookies } from 'react-cookie'
 
-function LogIn() {
+
+
+const headers = {
+  'Content-Type': 'text/plain'
+};
+
+const LogIn = () => {
+  
+  const navigate = useNavigate();
+
+  const [cookies, setCookie] = useCookies(['token'])
+  
+  const onFinish = (values) => {
+    console.log('Success:', values);
+
+    axios.post('http://localhost:8080/v1/users/login', {
+      email: values.username,
+      password: values.password,
+    },
+    {headers}
+    )
+    .then(function (response) {
+      console.log(response);
+      setCookie('token', response.data.token, { path: '/' })
+      navigate("/");
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+  
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
+  
   return (
-    <div className="login">
+    <Form
+      name="basic"
+      labelCol={{
+        span: 8,
+      }}
+      wrapperCol={{
+        span: 16,
+      }}
+      initialValues={{
+        remember: true,
+      }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+    >
+      <Form.Item
+        label="Username"
+        name="username"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your username!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
 
-      <h1>LogIn</h1>
-      
-      <form>
-        <label htmlFor="email">Email</label>
-        <input type="email" name="email" id="email" />
-        <br/>
-        
-        <label htmlFor="password">Password</label>
-        <input type="password" name="password" id="password" />
-        <br/>
+      <Form.Item
+        label="Password"
+        name="password"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your password!',
+          },
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
 
-        <button type="submit">Log In</button>
-        <br/>
+      <Form.Item
+        name="remember"
+        valuePropName="checked"
+        wrapperCol={{
+          offset: 8,
+          span: 16,
+        }}
+      >
+        <Checkbox>Remember me</Checkbox>
+      </Form.Item>
 
-        <button><Link to="/signup">Sign Up</Link></button>
-        
-      </form>
-    </div>
+      <Form.Item
+        wrapperCol={{
+          offset: 8,
+          span: 16,
+        }}
+      >
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
