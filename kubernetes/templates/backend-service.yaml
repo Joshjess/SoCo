@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appName }}-backend
+  labels:
+    app: {{ .Values.appName }}-backend
+spec:
+  ports:
+    - name: backend-port
+      port: 8080
+      targetPort: 8080
+  #TODO: figure out what this does
+  # selector:
+  #   io.kompose.service: backend
+# status:
+#   loadBalancer: {}

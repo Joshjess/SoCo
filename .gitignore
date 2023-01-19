@@ -2,5 +2,6 @@
 .vscode
 
 # Project files
-baceknd/tmp/*
+backend/tmp/*
 tmp/*
+baceknd
