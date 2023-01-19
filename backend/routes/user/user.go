@@ -55,6 +55,8 @@ func AddUserRoutes(rg *gin.RouterGroup, db *gorm.DB) {
 }
 
 func (e *UserEnv) loginUserFunc(c *gin.Context) {
+	// c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	var user User
 	err := c.BindJSON(&user)
 	if err != nil {

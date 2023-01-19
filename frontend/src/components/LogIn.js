@@ -1,10 +1,37 @@
 import { Button, Checkbox, Form, Input } from 'antd';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { useCookies } from 'react-cookie'
 
+
+
+const headers = {
+  'Content-Type': 'text/plain'
+};
 
 const LogIn = () => {
   
+  const navigate = useNavigate();
+
+  const [cookies, setCookie] = useCookies(['token'])
+  
   const onFinish = (values) => {
     console.log('Success:', values);
+
+    axios.post('http://localhost:8080/v1/users/login', {
+      email: values.username,
+      password: values.password,
+    },
+    {headers}
+    )
+    .then(function (response) {
+      console.log(response);
+      setCookie('token', response.data.token, { path: '/' })
+      navigate("/");
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   };
   
   const onFinishFailed = (errorInfo) => {

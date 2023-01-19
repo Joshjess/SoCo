@@ -1,6 +1,5 @@
 import { Button, Form, Input } from 'antd';
 import axios from 'axios';
-import { redirect } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
   
@@ -14,13 +13,12 @@ const headers = {
   //   return redirect("/login");
   // };
   
-  const SignUp = () => {
+const SignUp = () => {
     
   const navigate = useNavigate();
   
   const onFinish = (values) => {
     console.log('Success:', values);
-    // console.log('Matching', values.password === values.rePassword)
 
     axios.post('http://localhost:8080/v1/users/signup', {
       email: values.username,
