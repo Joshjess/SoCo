@@ -1,29 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-frontend
+  name: {{ .Values.appName }}-frontend-deployment
   labels:
     app: {{ .Values.appName }}-frontend
 spec:
-  replicas: 
+  replicas: {{ .Values.frontendDeployment.replicaCount }}
   selector:
     matchLabels:
-      io.kompose.service: frontend
-  strategy: {}
+      app : {{ .Values.appName }}-frontend
   template:
-    #TODO: look into what this does
     metadata:
       labels:
-        io.kompose.service: frontend
+        app : {{ .Values.appName }}-frontend
     spec:
       containers:
-        - env:
-            - name: API_URL
-              value: {{.Values.apiUrl}}
-          image: frontend-image
-          name: frontend
+      - name: frontend-container
+        image: {{ .Values.frontendImage }}
+        env:
+        - name: API_URL
+            value: {{.Values.apiUrl}}
           ports:
-            - containerPort: {{.Values.frontendPort}}}
-          resources: {}
+          - containerPort: {{.Values.frontendContainerPort}}
       restartPolicy: Always
-status: {}

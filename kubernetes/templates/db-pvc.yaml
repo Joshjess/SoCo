@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: { { .Values.volumeName } }
+  name: { { .Values.volumeClaimName } }
   labels:
-    app: { { .Values.volumeName } }
+    app: { { .Values.volumeClaimName } }
 spec:
+  storageClassName: microk8s-hostpath
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: { { .Values.volumeSize } }
-status: {}

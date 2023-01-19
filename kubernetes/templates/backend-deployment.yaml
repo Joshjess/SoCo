@@ -1,24 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-backend
+  name: {{ .Values.appName }}-backend-deployment
   labels:
     app: {{ .Values.appName }}-backend
 spec:
   replicas: {{.Values.backendDeplyoment.replicaCount}}
-  # TODO: Investigate what this does
-  # selector:
-  #   matchLabels:
-  #     io.kompose.service: backend
-  # TODO: Also investigate what this does
+  selector:
+    matchLabels:
+      app : {{ .Values.appName }}-backend
   template:
     metadata:
       labels:
-        io.kompose.service: backend
+        app : {{ .Values.appName }}-backend
     spec:
       containers:
-        #TODO: Look into env files
-        - env:
+        - name: backend-container
+          image: {{ .Values.backendImage }}
+          ports:
+            - containerPort: {{.Values.backendDeplyoment.containerPort}}
+          env:
             - name: DATABASE_CLIENT
               value: {{ .Values.databaseClient }}
             #should find a way to assign this dynamic
@@ -36,10 +37,4 @@ spec:
               value: {{.Values.frontendUrl}}
             - name: URL
               value: {{.Values.backendUrl}}
-          image: backend-image
-          name: backend
-          ports:
-            - containerPort: {{.Values.backendDeplyoment.containerPort}}
-          resources: {}
       restartPolicy: Always
-status: {}
