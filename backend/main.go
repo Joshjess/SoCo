@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/db_schema"
+	Cors "backend/middleware/cors"
 	CommentRoutes "backend/routes/comment"
 	PostRoutes "backend/routes/post"
 	UserRoutes "backend/routes/user"
@@ -28,8 +29,11 @@ func main() {
 		})
 	})
 	v1 := r.Group("/v1")
-	UserRoutes.AddUserRoutes(v1, db)
-	PostRoutes.AddPostRoutes(v1, db)
-	CommentRoutes.AddCommentRoutes(v1, db)
+	v1.Use(Cors.CORSMiddleware())
+	{
+		UserRoutes.AddUserRoutes(v1, db)
+		PostRoutes.AddPostRoutes(v1, db)
+		CommentRoutes.AddCommentRoutes(v1, db)
+	}
 	r.Run()
 }

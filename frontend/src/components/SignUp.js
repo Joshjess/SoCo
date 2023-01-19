@@ -1,17 +1,45 @@
 import { Button, Form, Input } from 'antd';
+import axios from 'axios';
+import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+  
 
 
-const SignUp = () => {
+const headers = {
+  'Content-Type': 'text/plain'
+};
+
+// const goToLogin = () => {
+  //   return redirect("/login");
+  // };
+  
+  const SignUp = () => {
+    
+  const navigate = useNavigate();
   
   const onFinish = (values) => {
     console.log('Success:', values);
     // console.log('Matching', values.password === values.rePassword)
+
+    axios.post('http://localhost:8080/v1/users/signup', {
+      email: values.username,
+      password: values.password,
+    },
+    {headers}
+    )
+    .then(function (response) {
+      console.log(response);
+      navigate("/login");
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   };
   
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
-
   
   return (
     <Form
