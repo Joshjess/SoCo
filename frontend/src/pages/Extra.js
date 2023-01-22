@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Space } from 'antd';
-import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { Space } from 'antd';
 import Posts from '../components/Posts';
+import AddPost from '../components/AddPost';
 
 
 const Extra = () => {
@@ -30,6 +30,8 @@ const Extra = () => {
   return (
     <>
       <h1>Extra</h1>
+
+      <AddPost />
 
       <div>
         <Space

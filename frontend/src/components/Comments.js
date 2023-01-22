@@ -1,8 +1,6 @@
 import { Button, Card } from 'antd';
 import { LikeOutlined, DislikeOutlined, CommentOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import AddComment from './AddComment';
-import Comments from './Comments';
 
 const headers = {
   'Content-Type': 'text/plain'
@@ -23,17 +21,6 @@ function requestLike(id, vote) {
   })
 }
 
-function requestComments(id) {
-  axios.get('http://localhost:8080/v1/comments/post/' + id, 
-  {}, {headers} )
-  .catch(function (error) {
-    console.log(error);
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-}
-
 function handleLike(id) {
   console.log(id)
   requestLike(id, true)
@@ -44,30 +31,30 @@ function handleDislike(id) {
   requestLike(id, false)
 }
 
-function Posts(posts) {
+function Comments(comments) {
   return (
     <>
-      <h1>Posts</h1>
-      {posts.posts.map((post, index) => (
-        <Card key={index} title={post.title} size="small">
-          <p>{post.text}</p>
+      <h4>Comments</h4>
+      {comments.comments.map((comment, index) => {
+        if (comment.message === "No comments found") {
+          return <p>{comment.message}</p>
+        }
+        else (
+        <Card key={index} title={comment.title} size="small">
+          <p>{comment.text}</p>
 
           <Button key={index} type="primary" onClick={() => handleLike(index)}>
             <LikeOutlined />Like
           </Button>
 
-          <Button key={index} danger onClick={() => handleDislike(index)}>
+          <Button key={index} danger onClick={() =>handleDislike(index)}>
             <DislikeOutlined />Dislike
           </Button>
 
-          <AddComment post_id={index} />
-
-          {/* <Comments comments={requestComments(index).data}/> */}
-
         </Card>
-      ))}
+      )})}
     </>
   );
 };
 
-export default Posts;
+export default Comments;
