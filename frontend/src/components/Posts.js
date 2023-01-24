@@ -7,24 +7,22 @@ import { useCookies } from 'react-cookie';
 
 // const axios = require('axios');
 
-// rewrite this as a const
-export default
 function Posts(posts) {
 
-  function requestLike(id, vote, cookie) {
+  function postLike(id, vote, cookie) {
     console.log(id, vote, cookie.token)
   
     let data = {
-      "post_id": id,
-      "vote": vote,
+      post_id: id,
+      vote: vote,
     };
   
     let headers = {
       'Content-Type': 'text/plain',
-      Authorization: `Bearer ${cookie.token}`,
+      'Authorization': 'Bearer ' + cookie.token,
     };
   
-    axios.post('http://localhost:8080/v1/posts/vote', data, headers, {withCredentials: true})
+    axios.post('http://localhost:8080/v1/posts/vote/', data, {headers: headers})
     .catch(function (error) {
       console.log(error);
     })
@@ -34,11 +32,12 @@ function Posts(posts) {
   }
   
   function requestComments(id) {
-    axios.get('http://localhost:8080/v1/comments/post/' + id, 
-    {}, 
-    { headers: {
-      'Content-Type': 'text/plain'
-    }})
+    
+    let headers = {
+      'Content-Type': 'text/plain',
+    };
+    
+    axios.get('http://localhost:8080/v1/comments/post/' + id, {headers: headers})
     .catch(function (error) {
       console.log(error);
     })
@@ -49,15 +48,18 @@ function Posts(posts) {
   
   function handleLike(id, cookies) {
     console.log(id)
-    requestLike(id, true, cookies)
+    postLike(id, true, cookies)
   }
   
   function handleDislike(id, cookie) {
     console.log(id)
-    requestLike(id, false, cookie)
+    postLike(id, false, cookie)
   }
+  
   const [cookies, setCookie] = useCookies(['token'])
+  
   console.log(cookies)
+
   return (
     <>
       <h1>Posts</h1>
@@ -73,6 +75,9 @@ function Posts(posts) {
             <DislikeOutlined />Dislike
           </Button>
 
+          <p>{post.upvote} likes</p>
+          <p>{post.downvote} dislikes</p>
+
           <AddComment post_id={post.id} />
 
           {/* <Comments comments={requestComments(post.id).data}/> */}
@@ -83,4 +88,4 @@ function Posts(posts) {
   );
 };
 
-// export default Posts;
+export default Posts;
