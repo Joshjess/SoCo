@@ -16,18 +16,18 @@ spec:
     spec:
       containers:
           name: db-container
-          image: postgres:{{ .Values.dbVersion }}
+          image: postgres:{{ .Values.db.pgVersion }}
           imagePullPolicy: "IfNotPresent"
           ports:
-            - containerPort: 5432
+            - pgPort: 5432
           #TODO: look into if this good way to specify env vars and look into configmaps
           env:
             - name: POSTGRES_DB
-              value: postgres
+              value: {{.Values.db.name}}
             - name: POSTGRES_PASSWORD
-              value: password123
+              value: {{.Values.db.password}}
             - name: POSTGRES_USER
-              value: postgres
+              value: {{.Values.db.user}}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: {{.Values.volumeMountName}}

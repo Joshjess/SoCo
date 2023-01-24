@@ -3,13 +3,36 @@
 # Declare variables to be passed into your templates.
 appName: webapp
 
-replicaCount: 1
 
-image:
-  repository: postgres
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+# Volume
+volumeMountName: webapp-pv-mount
+volumeClaimName: webapp-pv-claim
+volumeName: webapp-pv-volume
+volumeSize: 1Gi
+
+
+# Database
+db:
+  pgVersion: latest
+  port: 5432
+  user: postgres
+  password: password123
+  name: postgres
+
+
+# Backend
+backend:
+  image: webapp/backend:latest
+  replicaCount: 1
+  containerPort: 3000
+
+# Frontend
+frontend:
+  image: webapp/frontend:latest
+  replicaCount: 1
+  containerPort: 80
+
+
 
 imagePullSecrets: []
 nameOverride: ""

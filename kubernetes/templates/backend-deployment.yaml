@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Values.appName }}-backend
 spec:
-  replicas: {{.Values.backendDeplyoment.replicaCount}}
+  replicas: {{.Values.backend.replicaCount}}
   selector:
     matchLabels:
       app : {{ .Values.appName }}-backend
@@ -16,25 +16,19 @@ spec:
     spec:
       containers:
         - name: backend-container
-          image: {{ .Values.backendImage }}
+          image: {{ .Values.backend.image }}
           ports:
-            - containerPort: {{.Values.backendDeplyoment.containerPort}}
+            - containerPort: {{.Values.backend.containerPort}}
           env:
-            - name: DATABASE_CLIENT
-              value: {{ .Values.databaseClient }}
             #should find a way to assign this dynamic
             - name: DATABASE_HOST
               value: db
             - name: DATABASE_NAME
-              value: {{ .Values.databaseName }}
+              value: {{ .Values.db.name }}
             - name: DATABASE_PASSWORD
-              value: {{.Values.databasePassword}}
+              value: {{.Values.db.password}}
             - name: DATABASE_PORT
-              value: {{.Values.databasePort}}
+              value: {{.Values.db.port}}
             - name: DATABASE_USERNAME
-              value: {{.Values.databaseUsername}}
-            - name: FRONTEND_URL
-              value: {{.Values.frontendUrl}}
-            - name: URL
-              value: {{.Values.backendUrl}}
+              value: {{.Values.db.user}}
       restartPolicy: Always
