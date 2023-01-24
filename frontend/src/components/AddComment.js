@@ -29,7 +29,7 @@ function postComment (text, id, cookie) {
 function AddComment(post_id) {
   
   const [cookies, setCookie] = useCookies(['token'])
-
+  
   const onFinish = (values) => {
     console.log('Success:', values);
     console.log('Success:', post_id.post_id);
