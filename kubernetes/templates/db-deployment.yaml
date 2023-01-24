@@ -1,14 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-db
-  labels:
-    app: {{ .Values.appName }}-db
+  name: {{ .Values.appName }}-db-deployment
 spec:
-  replicas: {{ .Values.databaseDeployment.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: {{ .Values.appName }}-db
+      app: {{ .Values.appName }}-db
   strategy:
     type: Recreate
   template:
@@ -17,23 +15,24 @@ spec:
         app: {{ .Values.appName }}-db
     spec:
       containers:
-      #TODO: look into if this good way to specify env vars
-        - env:
-            - name: POSTGRES_DB
-              value: postgres
-            - name: POSTGRES_PASSWORD
-              value: password123
-            - name: POSTGRES_USER
-              value: postgres
-          image: postgres
-          name: db
+          name: db-container
+          image: postgres:{{ .Values.db.pgVersion }}
+          imagePullPolicy: "IfNotPresent"
           ports:
-            - containerPort: 5432
+            - pgPort: 5432
+          #TODO: look into if this good way to specify env vars and look into configmaps
+          env:
+            - name: POSTGRES_DB
+              value: {{.Values.db.name}}
+            - name: POSTGRES_PASSWORD
+              value: {{.Values.db.password}}
+            - name: POSTGRES_USER
+              value: {{.Values.db.user}}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: {{.Values.volumeName}}
+              name: {{.Values.volumeMountName}}
       restartPolicy: Always
       volumes:
-        - name: postgres-soco
+        - name:  {{.Values.volumeMountName}}
           persistentVolumeClaim:
-            claimName: postgres-soco
+            claimName: {{ .Values.volumeClaimName }}

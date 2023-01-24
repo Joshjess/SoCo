@@ -5,18 +5,25 @@ import (
 	CommentRoutes "backend/routes/comment"
 	PostRoutes "backend/routes/post"
 	UserRoutes "backend/routes/user"
-	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-// function that handles options request
-func optionsHandler(c *gin.Context) {
-	if c.Request.Method == "OPTIONS" {
-		c.AbortWithStatus(204)
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
 	}
 }
 
@@ -30,16 +37,14 @@ func main() {
 	db.AutoMigrate(&db_schema.User{}, &db_schema.Post{}, &db_schema.Comment{}, db_schema.VotePost{}, db_schema.VoteComment{})
 
 	//seup CORS
-	myCors := cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET, POST, OPTIONS, PUT, PATCH, DELETE"},
-		AllowHeaders:     []string{"Content-Type", "Origin, X-Requested-With, Content-Type, Accept, Authorization", "Accept-Encoding", "Cache-Control", "X-Requested-With", "accept", "origin, Access-Control-Allow-Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"},
-		ExposeHeaders:    []string{"Origin, X-Requested-With, Content-Type, Accept, Authorization", "Accept-Encoding", "Cache-Control", "X-Requested-With"},
-		AllowCredentials: true,
-		// AllowAllOrigins:  true,
-		MaxAge:        12 * time.Hour,
-		AllowWildcard: true,
-	})
+	// myCors := cors.New(cors.Config{
+	// 	AllowOrigins:     []string{"*"},
+	// 	AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "DELETE"},
+	// 	AllowHeaders:     []string{"Origin"},
+	// 	ExposeHeaders:    []string{"Content-Length"},
+	// 	AllowCredentials: false,
+	// 	MaxAge:           12 * time.Hour,
+	// })
 
 	r := gin.Default()
 
@@ -49,14 +54,11 @@ func main() {
 	// 	})
 	// })
 	v1 := r.Group("/v1")
-	v1.Use(myCors)
+	v1.Use(CORSMiddleware())
 	{
-		v1.Use(optionsHandler)
-		{
-			UserRoutes.AddUserRoutes(v1, db)
-			PostRoutes.AddPostRoutes(v1, db)
-			CommentRoutes.AddCommentRoutes(v1, db)
-		}
+		UserRoutes.AddUserRoutes(v1, db)
+		PostRoutes.AddPostRoutes(v1, db)
+		CommentRoutes.AddCommentRoutes(v1, db)
 	}
 	r.Run()
 }

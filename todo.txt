@@ -1,0 +1,1 @@
+Make script that creates a private registry and pushes images to it

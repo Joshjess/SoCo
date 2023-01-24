@@ -1,16 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.appName }}-db
+  name: {{ .Values.appName }}-db-service
   labels:
     app: {{ .Values.appName }}-db
 spec:
+  type: NodePort
   ports:
-    - name: "5432"
-      port: 5432
-      targetPort: 5432
-  # komppose put it in but i am not understanding it
-  # selector:
-  #   io.kompose.service: db
-status:
-  loadBalancer: {}
+    port: {{.Values.db.port}}
+  selector:
+    app: {{ .Values.appName }}-db
+
