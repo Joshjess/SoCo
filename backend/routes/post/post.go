@@ -9,9 +9,13 @@ import (
 )
 
 type Post struct {
-	Title  string `json:"title" binding:"required"`
-	Text   string `json:"text" binding:"required"`
-	UserID uint   `json:"-"`
+	ID       uint   `json:"id" gorm:"primarykey"`
+	Title    string `json:"title" binding:"required"`
+	Text     string `json:"text" binding:"required"`
+	Upvote   int64  `json:"upvote"`
+	DownVote int64  `json:"downvote"`
+	UserID   uint   `json:"user_id"`
+	UserName string `json:"username" gorm:"-"` // Virtual field
 }
 
 type VotePost struct {
@@ -20,8 +24,33 @@ type VotePost struct {
 	Vote   bool `json:"vote"`
 }
 
+type User struct {
+	gorm.Model
+	Email string
+}
+
 type PostEnv struct {
 	db *gorm.DB
+}
+
+func countLikesAndLikes(db *gorm.DB, postID uint) (int64, int64) {
+	var likes int64
+	var dislikes int64
+	result := db.Model(&VotePost{}).Where("post_id = ? and vote = ?", postID, true).Count(&likes)
+	result_1 := db.Model(&VotePost{}).Where("post_id = ? and vote = ?", postID, false).Count(&dislikes)
+	if result.Error != nil && result_1.Error != nil {
+		return 0, 0
+	}
+	return likes, dislikes
+}
+
+func addUsernameToPost(db *gorm.DB, post *Post) {
+	var user User
+	result := db.Where("id = ?", post.UserID).First(&user)
+	if result.Error != nil {
+		return
+	}
+	post.UserName = user.Email
 }
 
 func getUintFromContext(c *gin.Context, key string) (uint, bool) {
@@ -67,6 +96,18 @@ func (e *PostEnv) getAllPostsFunc(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "No posts found"})
 		return
 	}
+	// Add like and dislike count to post
+	for i := 0; i < len(posts); i++ {
+		likes, dislikes := countLikesAndLikes(e.db, posts[i].ID)
+		posts[i].Upvote = likes
+		posts[i].DownVote = dislikes
+	}
+
+	// add username to post
+	for i := 0; i < len(posts); i++ {
+		addUsernameToPost(e.db, &posts[i])
+	}
+
 	c.JSON(200, posts)
 }
 
@@ -87,6 +128,19 @@ func (e *PostEnv) getUserPostsFunc(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "No posts found"})
 		return
 	}
+
+	// Add like and dislike count to post
+	for i := 0; i < len(posts); i++ {
+		likes, dislikes := countLikesAndLikes(e.db, posts[i].ID)
+		posts[i].Upvote = likes
+		posts[i].DownVote = dislikes
+	}
+
+	// add username to post
+	for i := 0; i < len(posts); i++ {
+		addUsernameToPost(e.db, &posts[i])
+	}
+
 	c.JSON(200, posts)
 }
 
@@ -103,6 +157,15 @@ func (e *PostEnv) getPostFunc(c *gin.Context) {
 		c.JSON(400, gin.H{"error": result.Error.Error()})
 		return
 	}
+
+	// Add like and dislike count to post
+	likes, dislikes := countLikesAndLikes(e.db, post.ID)
+	post.Upvote = likes
+	post.DownVote = dislikes
+
+	// add username to post
+	addUsernameToPost(e.db, &post)
+
 	c.JSON(200, post)
 }
 
@@ -152,7 +215,7 @@ func (e *PostEnv) votePostFunc(c *gin.Context) {
 	vote.UserID = user_id
 	result = e.db.Create(&vote)
 	if result.Error != nil {
-		c.JSON(400, gin.H{"error": result.Error.Error()})
+		c.JSON(400, gin.H{"error": "Already voted"})
 		return
 	}
 }

@@ -26,8 +26,8 @@ const LogIn = () => {
     )
     .then(function (response) {
       console.log(response);
-      setCookie('token', response.data.token, { path: '/' })
-      navigate("/");
+      setCookie('token', response.data.token, { path: '/', secure: true, sameSite: 'none'})
+      navigate("/extra");
     })
     .catch(function (error) {
       console.log(error);

@@ -9,9 +9,13 @@ import (
 )
 
 type Comment struct {
-	Text   string `json:"text" binding:"required"`
-	UserID uint   `json:"-"`
-	PostID uint   `json:"post_id"`
+	ID       uint   `json:"id" gorm:"primarykey"`
+	Text     string `json:"text" binding:"required"`
+	UserID   uint   `json:"-"`
+	PostID   uint   `json:"post_id"`
+	Likes    int64  `json:"likes" gorm:"-"`
+	Dislikes int64  `json:"dislikes" gorm:"-"`
+	UserName string `json:"username" gorm:"-"`
 }
 
 type VoteComment struct {
@@ -20,8 +24,33 @@ type VoteComment struct {
 	Vote      bool `json:"vote"`
 }
 
+type User struct {
+	gorm.Model
+	Email string
+}
+
 type CommentEnv struct {
 	db *gorm.DB
+}
+
+func countLikesAndLikes(db *gorm.DB, commentID uint) (int64, int64) {
+	var likes int64
+	var dislikes int64
+	result := db.Model(&VoteComment{}).Where("comment_id = ? and vote = ?", commentID, true).Count(&likes)
+	result_1 := db.Model(&VoteComment{}).Where("comment_id = ? and vote = ?", commentID, false).Count(&dislikes)
+	if result.Error != nil && result_1.Error != nil {
+		return 0, 0
+	}
+	return likes, dislikes
+}
+
+func addUsernameToPost(db *gorm.DB, comment *Comment) {
+	var user User
+	result := db.Where("id = ?", comment.UserID).First(&user)
+	if result.Error != nil {
+		return
+	}
+	comment.UserName = user.Email
 }
 
 func getUintFromContext(c *gin.Context, key string) (uint, bool) {
@@ -66,6 +95,13 @@ func (e *CommentEnv) getPostCommentsFunc(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "No comments found"})
 		return
 	}
+	for i := 0; i < len(comments); i++ {
+		addUsernameToPost(e.db, &comments[i])
+		likes, dislikes := countLikesAndLikes(e.db, comments[i].ID)
+		comments[i].Likes = likes
+		comments[i].Dislikes = dislikes
+	}
+
 	c.JSON(200, comments)
 }
 
@@ -112,7 +148,7 @@ func (e *CommentEnv) voteCommentFunc(c *gin.Context) {
 	vote.UserID = user_id
 	result = e.db.Create(&vote)
 	if result.Error != nil {
-		c.JSON(400, gin.H{"error": result.Error.Error()})
+		c.JSON(400, gin.H{"error": "Probaly comment does not exist"})
 		return
 	}
 }
