@@ -9,8 +9,29 @@ import { useCookies } from 'react-cookie';
 
 function Posts(posts) {
 
+  // function getComments(id) {
+  //   // console.log(id)
+  //   axios.get('http://localhost:8080/v1/comments/post/' + id, 
+  //   {
+  //     headers: {
+  //       'Content-Type': 'text/plain'
+  //     }
+  //   })
+  //   .then(response => {
+  //     // console.log(response.data)
+  //     if (response.data.length > 0) {
+  //       return response.data[0].text
+  //     } else {  
+  //       return 'no comments'
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   })
+  // }
+
   function postLike(id, vote, cookie) {
-    console.log(id, vote, cookie.token)
+    // console.log(id, vote, cookie.token)
   
     let data = {
       post_id: id,
@@ -31,28 +52,13 @@ function Posts(posts) {
     })
   }
   
-  function requestComments(id) {
-    
-    let headers = {
-      'Content-Type': 'text/plain',
-    };
-    
-    axios.get('http://localhost:8080/v1/comments/post/' + id, {headers: headers})
-    .catch(function (error) {
-      console.log(error);
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-  }
-  
   function handleLike(id, cookies) {
-    console.log(id)
+    // console.log(id)
     postLike(id, true, cookies)
   }
   
   function handleDislike(id, cookie) {
-    console.log(id)
+    // console.log(id)
     postLike(id, false, cookie)
   }
   
@@ -63,7 +69,7 @@ function Posts(posts) {
   return (
     <>
       <h1>Posts</h1>
-      {posts.posts.map((post, index) => (
+      {posts.posts.map((post) => (
         <Card key={post.id} title={post.title + " from " + post.username} size="small">
           <p>{post.text}</p>
 
@@ -80,7 +86,8 @@ function Posts(posts) {
 
           <AddComment post_id={post.id} />
 
-          {/* <Comments comments={requestComments(post.id).data}/> */}
+          {/* ********* use state from extra here ********* */}
+          <Comments post_id={post.id} />
 
         </Card>
       ))}

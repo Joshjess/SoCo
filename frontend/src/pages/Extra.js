@@ -5,7 +5,7 @@ import Posts from '../components/Posts';
 import AddPost from '../components/AddPost';
 
 
-const Extra = () => {
+function Extra() {
   // console.log(cookies.token)
   const [posts, setPosts] = useState([]);
 
@@ -24,9 +24,7 @@ const Extra = () => {
     fetchData()
   }, [])
 
-  // console.log(posts)
 
-  // populate the page with the posts
   return (
     <>
       <h1>Extra</h1>
