@@ -18,6 +18,5 @@ spec:
         - name: frontend-container
           image: {{ .Values.frontend.image }}
           ports:
-            - containerPort: {{ .Values.frontendContainerPort }}
-              targetPort: {{ .Values.frontendTargetPort }}
+            - containerPort: {{ .Values.frontend.containerPort }}
       restartPolicy: Always

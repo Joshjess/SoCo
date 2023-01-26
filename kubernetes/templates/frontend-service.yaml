@@ -3,10 +3,12 @@ kind: Service
 metadata:
   name: "{{ .Values.appName }}-frontend-service"
 spec:
+  selector:
+    app.kubernetes.io/name: {{ .Values.appName }}-frontend
   ports:
     - protocol: TCP
       containerPort: {{ .Values.frontend.containerPort }}
-      targetPort: {{ .Values.frontend.targetPort }}
+      port: {{ .Values.frontend.targetPort }}
   selector:
     app: "{{ .Values.appName }}-frontend"
 status:
