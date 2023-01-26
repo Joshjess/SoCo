@@ -4,13 +4,6 @@ import { useCookies } from 'react-cookie';
 
 const { TextArea } = Input;
 
-// ******** POST ERROR ********
-//
-// short description: column "upvote" of relation "posts" does not exist (SQLSTATE 42703)
-//
-// long error:
-// 2023/01/25 00:19:59 /home/radu/VU/SC/SoCo/backend/routes/post/post.go:187 ERROR: column "upvote" of relation "posts" does not exist (SQLSTATE 42703)
-// [0.793ms] [rows:0] INSERT INTO "posts" ("title","text","upvote","down_vote","user_id") VALUES ('w','www',0,0,19) RETURNING "id"
 
 function postPost(title, text, cookie) {
   console.log(title, text, cookie.token)
