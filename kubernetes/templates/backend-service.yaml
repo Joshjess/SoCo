@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.appName }}-backend-service
+  name: "{{ .Values.appName }}-backend-service"
 spec:
   type: ClusterIP
   ports:
     - name: backend-port
-      targetPort: {{.Values.backend.targetPort}}
-      nodePort: {{.Values.backend.nodePort}}
+      port: {{ .Values.backend.port }}
+      targetPort: {{ .Values.backend.targetPort }}
+      nodePort: {{ .Values.backend.nodePort }}
   selector:
-    app : {{ .Values.appName }}-backend
+    app: "{{ .Values.appName }}-backend"
