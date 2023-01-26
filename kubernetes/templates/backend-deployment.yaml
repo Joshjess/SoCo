@@ -3,22 +3,20 @@ kind: Deployment
 metadata:
   name: "{{ .Values.appName }}-backend-deployment"
   labels:
-    app: "{{ .Values.appName }}-backend"
+    app.kubernetes.io/name: "{{ .Values.appName }}-backend"
 spec:
   replicas: {{ .Values.backend.replicaCount }}
   selector:
     matchLabels:
-      app: "{{ .Values.appName }}-backend"
+      app.kubernetes.io/name: {{ .Values.appName }}-backend
   template:
     metadata:
       labels:
-        app: "{{ .Values.appName }}-backend"
+        app.kubernetes.io/name: "{{ .Values.appName }}-backend"
     spec:
       containers:
         - name: backend-container
           image: {{ .Values.backend.image }}
-          ports:
-            containerPort: {{ .Values.backend.containerPort }}
           env:
             #should find a way to assign this dynamic
             - name: DATABASE_HOST

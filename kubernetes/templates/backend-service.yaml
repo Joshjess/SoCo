@@ -3,11 +3,13 @@ kind: Service
 metadata:
   name: "{{ .Values.appName }}-backend-service"
 spec:
+  selector:
+    app.kubernetes.io/name: {{ .Values.appName }}-backend
   type: ClusterIP
   ports:
     - name: backend-port
       port: {{ .Values.backend.port }}
       targetPort: {{ .Values.backend.targetPort }}
-      nodePort: {{ .Values.backend.nodePort }}
+      # nodePort: {{ .Values.backend.nodePort }}
   selector:
     app: "{{ .Values.appName }}-backend"

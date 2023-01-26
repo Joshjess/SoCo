@@ -24,8 +24,9 @@ db:
 backend:
   image: webapp/backend:latest
   replicaCount: 1
-  containerPort: 8080
+  # containerPort: 8080
   targetPort: 3000
+
   port : 1234
 
 # Frontend
@@ -40,3 +41,4 @@ service:
   type: ClusterIP
   port: 80
   url : "test.test.com" 
+

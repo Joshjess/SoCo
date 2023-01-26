@@ -2,24 +2,26 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Values.appName }}-db-deployment"
+  labels:
+    app.kubernetes.io/name: "{{ .Values.appName }}-db"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "{{ .Values.appName }}-db"
+      app.kubernetes.io/name: "{{ .Values.appName }}-db"
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: "{{ .Values.appName }}-db"
+        app.kubernetes.io/name: "{{ .Values.appName }}-db"
     spec:
       containers:
-        name: db-container
+      - name: db-container
         image: postgres:{{ .Values.db.pgVersion }}
         imagePullPolicy: "IfNotPresent"
         ports:
-          - pgPort: "5432"
+          - containerPort: {{ .Values.db.port }}
         #TODO: look into if this good way to specify env vars and look into configmaps
         env:
           - name: POSTGRES_DB
