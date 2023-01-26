@@ -1,14 +1,14 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: {{.Values.volumeName}}
+  name: {{ .Values.volumeName }}
   labels:
     type: local
-    app: {{.Values.appName}}-db
+    app: "{{.Values.appName}}-db"
 spec:
   storageClassName: microk8s-hostpath
   capacity:
-    storage: {{.Values.volumeSize}}
+    storage: {{ .Values.volumeSize }}
   accessModes:
     - ReadWriteMany
   hostPath:

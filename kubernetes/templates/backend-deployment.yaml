@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-backend-deployment
+  name: "{{ .Values.appName }}-backend-deployment"
   labels:
-    app: {{ .Values.appName }}-backend
+    app: "{{ .Values.appName }}-backend"
 spec:
-  replicas: {{.Values.backend.replicaCount}}
+  replicas: {{ .Values.backend.replicaCount }}
   selector:
     matchLabels:
-      app : {{ .Values.appName }}-backend
+      app: "{{ .Values.appName }}-backend"
   template:
     metadata:
       labels:
-        app : {{ .Values.appName }}-backend
+        app: "{{ .Values.appName }}-backend"
     spec:
       containers:
         - name: backend-container
           image: {{ .Values.backend.image }}
           ports:
-            - containerPort: {{.Values.backend.containerPort}}
+            containerPort: {{ .Values.backend.containerPort }}
           env:
             #should find a way to assign this dynamic
             - name: DATABASE_HOST
@@ -26,9 +26,9 @@ spec:
             - name: DATABASE_NAME
               value: {{ .Values.db.name }}
             - name: DATABASE_PASSWORD
-              value: {{.Values.db.password}}
+              value: {{ .Values.db.password }}
             - name: DATABASE_PORT
-              value: {{.Values.db.port}}
+              value: "{{ .Values.db.port }}"
             - name: DATABASE_USERNAME
-              value: {{.Values.db.user}}
+              value: {{ .Values.db.user }}
       restartPolicy: Always

@@ -1,38 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-db-deployment
+  name: "{{ .Values.appName }}-db-deployment"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.appName }}-db
+      app: "{{ .Values.appName }}-db"
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ .Values.appName }}-db
+        app: "{{ .Values.appName }}-db"
     spec:
       containers:
-          name: db-container
-          image: postgres:{{ .Values.db.pgVersion }}
-          imagePullPolicy: "IfNotPresent"
-          ports:
-            - pgPort: 5432
-          #TODO: look into if this good way to specify env vars and look into configmaps
-          env:
-            - name: POSTGRES_DB
-              value: {{.Values.db.name}}
-            - name: POSTGRES_PASSWORD
-              value: {{.Values.db.password}}
-            - name: POSTGRES_USER
-              value: {{.Values.db.user}}
-          volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: {{.Values.volumeMountName}}
+        name: db-container
+        image: postgres:{{ .Values.db.pgVersion }}
+        imagePullPolicy: "IfNotPresent"
+        ports:
+          - pgPort: "5432"
+        #TODO: look into if this good way to specify env vars and look into configmaps
+        env:
+          - name: POSTGRES_DB
+            value: {{ .Values.db.name }}
+          - name: POSTGRES_PASSWORD
+            value: {{ .Values.db.password }}
+          - name: POSTGRES_USER
+            value: {{ .Values.db.user }}
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: {{ .Values.volumeMountName }}
       restartPolicy: Always
       volumes:
-        - name:  {{.Values.volumeMountName}}
+        - name: {{ .Values.volumeMountName }}
           persistentVolumeClaim:
             claimName: {{ .Values.volumeClaimName }}

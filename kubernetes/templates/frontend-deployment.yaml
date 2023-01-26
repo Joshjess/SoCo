@@ -1,25 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-frontend-deployment
+  name: "{{ .Values.appName }}-frontend-deployment"
   labels:
-    app: {{ .Values.appName }}-frontend
+    app: "{{ .Values.appName }}-frontend"
 spec:
-  replicas: {{ .Values.frontendDeployment.replicaCount }}
+  replicas: {{ .Values.frontend.replicaCount }}
   selector:
     matchLabels:
-      app : {{ .Values.appName }}-frontend
+      app: "{{ .Values.appName }}-frontend"
   template:
     metadata:
       labels:
-        app : {{ .Values.appName }}-frontend
+        app: "{{ .Values.appName }}-frontend"
     spec:
       containers:
-      - name: frontend-container
-        image: {{ .Values.frontendImage }}
-        env:
-        - name: API_URL
-            value: {{.Values.apiUrl}}
+        - name: frontend-container
+          image: {{ .Values.frontend.image }}
           ports:
-          - containerPort: {{.Values.frontendContainerPort}}
+            - containerPort: {{ .Values.frontendContainerPort }}
+              targetPort: {{ .Values.frontendTargetPort }}
       restartPolicy: Always
