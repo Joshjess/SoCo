@@ -5,8 +5,10 @@ import (
 	CommentRoutes "backend/routes/comment"
 	PostRoutes "backend/routes/post"
 	UserRoutes "backend/routes/user"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -28,7 +30,15 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func main() {
-	dsn := "host=localhost user=postgres password=password123 dbname=postgres port=5432 sslmode=disable TimeZone=Europe/Amsterdam"
+	godotenv.Load()
+
+	host := os.Getenv("DATABASE_HOST")
+	port := os.Getenv("DATABASE_PORT")
+	user := os.Getenv("DATABASE_USERNAME")
+	password := os.Getenv("DATABASE_PASSWORD")
+	dbname := os.Getenv("DATABASE_NAME")
+
+	dsn := "host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + port + " sslmode=disable TimeZone=Europe/Amsterdam"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -44,7 +54,7 @@ func main() {
 	// 	})
 	// })
 	v1 := r.Group("/v1")
-	v1.Use(CORSMiddleware())
+	// v1.Use(CORSMiddleware())
 	{
 		UserRoutes.AddUserRoutes(v1, db)
 		PostRoutes.AddPostRoutes(v1, db)

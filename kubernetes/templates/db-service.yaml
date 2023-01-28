@@ -2,15 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: "{{ .Values.appName }}-db-service"
-  selector:
-    app.kubernetes.io/name: {{ .Values.appName }}-db
 spec:
   selector:
-    app.kubernetes.io/name: {{ .Values.appName }}-db
-  type: NodePort
+    connection-0: db 
+  type: ClusterIP
   ports:
-    - name: db-port
-      port: {{ .Values.db.port }}
-      targetPort: {{ .Values.db.port }}
-  selector:
-    app.kubernetes.io/name: {{ .Values.appName }}-db
+  - protocol: TCP
+    port: {{ .Values.db.port }}
+    targetPort: {{ .Values.db.port }}

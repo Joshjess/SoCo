@@ -16,7 +16,7 @@ function LogIn() {
   const onFinish = (values) => {
     console.log('Success:', values);
 
-    axios.post('http://localhost:8080/v1/users/login', {
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/users/login`, {
       email: values.username,
       password: values.password,
     },

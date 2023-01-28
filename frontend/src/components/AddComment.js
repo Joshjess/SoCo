@@ -17,7 +17,7 @@ function postComment (text, id, cookie) {
     'Authorization': 'Bearer ' + cookie.token,
   };
 
-  axios.post('http://localhost:8080/v1/comments/create/', data, {headers: headers})
+  axios.post('${process.env.REACT_APP_BACKEND_URL}:v1/comments/create/', data, {headers: headers})
   .catch(function (error) {
     console.log(error);
   })

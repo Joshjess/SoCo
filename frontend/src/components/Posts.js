@@ -5,33 +5,10 @@ import AddComment from './AddComment';
 import Comments from './Comments';
 import { useCookies } from 'react-cookie';
 
-// const axios = require('axios');
 
 function Posts(posts) {
 
-  // function getComments(id) {
-  //   // console.log(id)
-  //   axios.get('http://localhost:8080/v1/comments/post/' + id, 
-  //   {
-  //     headers: {
-  //       'Content-Type': 'text/plain'
-  //     }
-  //   })
-  //   .then(response => {
-  //     // console.log(response.data)
-  //     if (response.data.length > 0) {
-  //       return response.data[0].text
-  //     } else {  
-  //       return 'no comments'
-  //     }
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   })
-  // }
-
   function postLike(id, vote, cookie) {
-    // console.log(id, vote, cookie.token)
   
     let data = {
       post_id: id,
@@ -43,7 +20,7 @@ function Posts(posts) {
       'Authorization': 'Bearer ' + cookie.token,
     };
   
-    axios.post('http://localhost:8080/v1/posts/vote/', data, {headers: headers})
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/posts/vote`, data, {headers: headers})
     .catch(function (error) {
       console.log(error);
     })
@@ -63,8 +40,6 @@ function Posts(posts) {
   }
   
   const [cookies, setCookie] = useCookies(['token'])
-  
-  console.log(cookies)
 
   return (
     <>
@@ -86,7 +61,6 @@ function Posts(posts) {
 
           <AddComment post_id={post.id} />
 
-          {/* ********* use state from extra here ********* */}
           <Comments post_id={post.id} />
 
         </Card>

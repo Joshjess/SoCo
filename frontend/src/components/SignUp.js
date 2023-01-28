@@ -20,7 +20,7 @@ const SignUp = () => {
   const onFinish = (values) => {
     console.log('Success:', values);
 
-    axios.post('http://localhost:8080/v1/users/signup', {
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/users/signup`, {
       email: values.username,
       password: values.password,
     },
