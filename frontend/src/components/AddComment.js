@@ -11,7 +11,7 @@ const headers = {
 
 
 function sendPost(title, text) {
-  axios.post('http://localhost:8080/v1/posts/create/', 
+  axios.post(`${process.env.REACT_APP_BACKEND_URL}:/v1/posts/create/`, 
     {
       Title: title, 
       Text: text,

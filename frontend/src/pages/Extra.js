@@ -11,7 +11,7 @@ const Extra = () => {
 
 
   const fetchData = () => { 
-    axios.get('http://localhost:8080/v1/posts/')
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/v1/posts/`)
     .then(response => {
       setPosts(response.data)
     })

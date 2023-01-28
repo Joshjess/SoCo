@@ -7,7 +7,7 @@ const headers = {
 };
 
 function requestLike(id, vote) {
-  axios.post('http://localhost:8080/v1/posts/vote', {
+  axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/posts/vote`, {
       post_id: id,
       vote: vote,
     },

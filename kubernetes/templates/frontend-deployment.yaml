@@ -8,15 +8,20 @@ spec:
   replicas: {{ .Values.frontend.replicaCount }}
   selector:
     matchLabels:
-      app: "{{ .Values.appName }}-frontend"
+      app: frontend
+      connection-1: backend
   template:
     metadata:
       labels:
-        app: "{{ .Values.appName }}-frontend"
+        app: frontend
+        connection-1: backend
     spec:
       containers:
         - name: frontend-container
           image: {{ .Values.frontend.image }}
+          env:
+            - name: REACT_APP_BACKEND_URL
+              value: "http://{{ .Values.appName }}-backend-service:8080"
           ports:
-            - containerPort: {{ .Values.frontend.containerPort }}
+            - containerPort :  3000
       restartPolicy: Always

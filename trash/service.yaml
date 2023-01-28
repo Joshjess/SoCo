@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name:  "{{ .Values.appName }}-service"
   labels:
-    app.kubernetes.io/name: "{{ .Values.appName }}-service"
+    app: {{ .Values.appName }}
 spec:
   selector: 
-    app.kubernetes.io/name: "{{ .Values.appName }}-service"
+    app: {{ .Values.appName }}
   type: {{ .Values.service.type }}
   ports:
     - port: 80

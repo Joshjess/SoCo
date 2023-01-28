@@ -9,7 +9,7 @@ const headers = {
 };
 
 function requestLike(id, vote) {
-  axios.post('http://localhost:8080/v1/posts/vote', {
+  axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/posts/vote`, {
       post_id: id,
       vote: vote,
     },
@@ -24,7 +24,7 @@ function requestLike(id, vote) {
 }
 
 function requestComments(id) {
-  axios.get('http://localhost:8080/v1/comments/post/' + id, 
+  axios.get(`${process.env.REACT_APP_BACKEND_URL}/v1/comments/post/` + id, 
   {}, {headers} )
   .catch(function (error) {
     console.log(error);
