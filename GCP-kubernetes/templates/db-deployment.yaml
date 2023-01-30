@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.appName }}-db-deployment"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      connection-0: db 
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        connection-0: db 
+    spec:
+      containers:
+      - name: db-container
+        image: postgres:{{ .Values.db.pgVersion }}
+        imagePullPolicy: "IfNotPresent"
+        ports:
+          - containerPort: {{ .Values.db.port }}
+        env:
+          - name: POSTGRES_DB
+            value: {{ .Values.db.name }}
+          - name: POSTGRES_PASSWORD
+            value: {{ .Values.db.password }}
+          - name: POSTGRES_USER
+            value: {{ .Values.db.user }}
+        volumeMounts:
+          - mountPath: /home/apsanradu/postgresql/data
+            name: {{ .Values.volumeMountName }}
+      restartPolicy: Always
+      volumes:
+        - name: {{ .Values.volumeMountName }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.volumeClaimName }}
