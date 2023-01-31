@@ -1,18 +1,24 @@
-import { Button, Card } from 'antd';
-import { LikeOutlined, DislikeOutlined, CommentOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Button, Space } from 'antd';
+import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { useCookies } from 'react-cookie';
 
-const headers = {
-  'Content-Type': 'text/plain'
-};
 
-function requestLike(id, vote) {
-  axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/posts/vote`, {
-      post_id: id,
-      vote: vote,
-    },
-    {headers}
-  )
+function postCommentLike(id, vote, cookie) {
+  // console.log(id, vote, cookie.token)
+
+  let data = {
+    comment_id: id,
+    vote: vote,
+  };
+
+  let headers = {
+    'Content-Type': 'text/plain',
+    'Authorization': 'Bearer ' + cookie.token,
+  };
+
+  axios.post('${process.env.REACT_APP_BACKEND_URL}/v1/comments/vote', data, {headers: headers})
   .catch(function (error) {
     console.log(error);
   })
@@ -21,40 +27,67 @@ function requestLike(id, vote) {
   })
 }
 
-function handleLike(id) {
-  console.log(id)
-  requestLike(id, true)
+function handleLike(id, cookies) {
+  // console.log(id)
+  postCommentLike(id, true, cookies)
 }
 
-function handleDislike(id) {
-  console.log(id)
-  requestLike(id, false)
+function handleDislike(id, cookie) {
+  // console.log(id)
+  postCommentLike(id, false, cookie)
 }
 
-function Comments(comments) {
-  return (
-    <>
-      <h4>Comments</h4>
-      {comments.comments.map((comment, index) => {
-        if (comment.message === "No comments found") {
-          return <p>{comment.message}</p>
-        }
-        else (
-        <Card key={index} title={comment.title} size="small">
-          <p>{comment.text}</p>
+function Comments(post_id) {
 
-          <Button key={index} type="primary" onClick={() => handleLike(index)}>
-            <LikeOutlined />Like
-          </Button>
+  const [comments, setComments] = useState([]);
+  const [cookies, setCookie] = useCookies(['token']);
 
-          <Button key={index} danger onClick={() =>handleDislike(index)}>
-            <DislikeOutlined />Dislike
-          </Button>
+  const fetchData = () => { 
+    axios.get('${process.env.REACT_APP_BACKEND_URL}/v1/comments/post/' + post_id.post_id)
+    .then(response => {
+      setComments(response.data)
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+  }
+  
+  useEffect(() => {
+    fetchData()
+  }, [])
 
-        </Card>
-      )})}
-    </>
-  );
-};
+  if (comments.length > 0) {
+    return (
+      <>
+        <h4>Comments</h4>
+        {comments.map((comment) => (
+          <>
+            <p>{comment.text} by {comment.username}</p>
+
+            <Button key={comment.id} type="primary" onClick={() => handleLike(comment.id, cookies)}>
+              <LikeOutlined />Like
+            </Button>
+
+            <Button key={comment.id} danger onClick={() => handleDislike(comment.id, cookies)}>
+              <DislikeOutlined />Dislike
+            </Button>
+
+            <p>{comment.likes} likes</p>
+            <p>{comment.dislikes} dislikes</p>
+
+            <Space />
+          </>
+        ))}
+      </>
+    );
+  } else {   
+    return (
+      <>
+        <h4>Comments</h4>
+        <p>Looks quite empty</p>
+      </>
+    );
+  }
+}
 
 export default Comments;

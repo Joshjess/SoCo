@@ -5,10 +5,10 @@ function NavBar() {
     <nav>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/login">LogIn</Link>
           </li>
           <li>
-            <Link to="/extra">Extra</Link>
+            <Link to="/signup">SignUp</Link>
           </li>
         </ul>
       </nav>

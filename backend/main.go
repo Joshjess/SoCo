@@ -5,7 +5,8 @@ import (
 	CommentRoutes "backend/routes/comment"
 	PostRoutes "backend/routes/post"
 	UserRoutes "backend/routes/user"
-	"net/http"
+
+	// "net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -48,11 +49,12 @@ func main() {
 	db.AutoMigrate(&db_schema.User{}, &db_schema.Post{}, &db_schema.Comment{}, db_schema.VotePost{}, db_schema.VoteComment{})
 
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+
+	// r.GET("/ping", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{
+	// 		"message": "pong",
+	// 	})
+	// })
 	v1 := r.Group("/v1")
 	// v1.Use(CORSMiddleware())
 	{

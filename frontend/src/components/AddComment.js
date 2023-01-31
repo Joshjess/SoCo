@@ -1,23 +1,23 @@
 import { Button, Form, Input } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
 import axios from 'axios';
-
-const { TextArea } = Input;
-
-const headers = {
-  'Content-Type': 'text/plain'
-};
+import { useCookies } from 'react-cookie';
 
 
+function postComment (text, id, cookie) {
+  console.log(text, id, cookie.token)
 
-function sendPost(title, text) {
-  axios.post(`${process.env.REACT_APP_BACKEND_URL}:/v1/posts/create/`, 
-    {
-      Title: title, 
-      Text: text,
-    }, 
-    {headers}
-  )
+  let data = {
+    text: text,
+    post_id: id,
+  };
+
+  let headers = {
+    'Content-Type': 'text/plain',
+    'Authorization': 'Bearer ' + cookie.token,
+  };
+
+  axios.post('${process.env.REACT_APP_BACKEND_URL}:v1/comments/create/', data, {headers: headers})
   .catch(function (error) {
     console.log(error);
   })
@@ -26,17 +26,14 @@ function sendPost(title, text) {
   })
 }
 
-// const onFinish = (values) => {
-//   console.log('Success:', values);
-//   sendPost(values.title, values.text)
-// }
-
 function AddComment(post_id) {
+  
+  const [cookies, setCookie] = useCookies(['token'])
   
   const onFinish = (values) => {
     console.log('Success:', values);
-    console.log('Success:', post_id);
-    // sendPost(values.title, values.text)
+    console.log('Success:', post_id.post_id);
+    postComment(values.comment, post_id.post_id, cookies)
   }
 
   return (

@@ -3,13 +3,11 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie'
 
-
-
 const headers = {
   'Content-Type': 'text/plain'
 };
 
-const LogIn = () => {
+function LogIn() {
   
   const navigate = useNavigate();
 

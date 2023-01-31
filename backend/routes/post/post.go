@@ -12,8 +12,8 @@ type Post struct {
 	ID       uint   `json:"id" gorm:"primarykey"`
 	Title    string `json:"title" binding:"required"`
 	Text     string `json:"text" binding:"required"`
-	Upvote   int64  `json:"upvote"`
-	DownVote int64  `json:"downvote"`
+	Upvote   int64  `json:"upvote" gorm:"-"`
+	DownVote int64  `json:"downvote" gorm:"-"`
 	UserID   uint   `json:"user_id"`
 	UserName string `json:"username" gorm:"-"` // Virtual field
 }
