@@ -28,7 +28,7 @@ backend:
 
 # Frontend
 frontend:
-  image: joshjess/frontend:https
+  image: raiduy/frontend:https
   replicaCount: 1
   port: 80
   containerPort: 80
