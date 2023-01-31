@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Values.volumeClaimName }}
 spec:
-  storageClassName: microk8s-hostpath
+  storageClassName: default
   accessModes:
     - ReadWriteOnce
   resources:

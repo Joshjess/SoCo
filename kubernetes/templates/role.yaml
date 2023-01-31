@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: chat-app-deployer
+  namespace: chat-app-namespace
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["pods", "services", "configmaps"]
+  verbs: ["create", "get", "list", "watch", "update", "patch", "delete"]
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["pods/log", "services/metrics"]
+  verbs: ["get", "list", "watch"]
+
+---
+#Storage manager
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: chat-app-storage-manager
+  namespace: chat-app-namespace
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["pods", "services", "configmaps"]
+  verbs: ["create", "get", "list", "watch", "update", "patch", "delete"]
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["pods/log", "services/metrics"]
+  verbs: ["get", "list", "watch"]

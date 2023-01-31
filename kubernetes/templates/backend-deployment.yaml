@@ -22,11 +22,23 @@ spec:
             - name: DATABASE_HOST
               value: "{{ .Values.appName }}-db-service"
             - name: DATABASE_NAME
-              value: {{ .Values.db.name }}
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-map
+                  key: postgres-name
             - name: DATABASE_PASSWORD
-              value: {{ .Values.db.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: postgres-password
             - name: DATABASE_PORT
-              value: "{{ .Values.db.port }}"
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-map
+                  key: postgres-port
             - name: DATABASE_USERNAME
-              value: {{ .Values.db.user }}
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-map
+                  key: postgres-user
       restartPolicy: Always
