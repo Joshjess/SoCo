@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Extra from "./pages/Extra";
 import LogInPage from "./pages/LogInPage";
 import SignUpPage from "./pages/SignUpPage";
+// require('dotenv').config()
 
 export default function App() {
   return (
