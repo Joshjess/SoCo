@@ -3,13 +3,11 @@
 # Declare variables to be passed into your templates.
 appName: webapp
 
-
 # Volume
 volumeMountName: webapp-pv-mount
 volumeClaimName: webapp-pv-claim
 volumeName: webapp-pv-volume
-volumeSize: 1Gi
-
+volumeSize: 10
 
 # Database
 db:
@@ -18,7 +16,6 @@ db:
   user: postgres
   password: password123
   name: postgres
-
 
 # Backend
 backend:
@@ -33,9 +30,7 @@ frontend:
   port: 80
   containerPort: 80
 
-
 service:
   type: ClusterIP
   port: 80
-  url : "test.test.com" 
-
+  url: "test.test.com"

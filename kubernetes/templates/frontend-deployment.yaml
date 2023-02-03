@@ -10,18 +10,21 @@ spec:
     matchLabels:
       app: frontend
       connection-1: backend
+      webapp: gke-lb-frontend
   template:
     metadata:
       labels:
+        webapp: gke-lb-frontend
         app: frontend
         connection-1: backend
     spec:
       containers:
         - name: frontend-container
           image: {{ .Values.frontend.image }}
+          imagePullPolicy: Always
           env:
             - name: REACT_APP_BACKEND_URL
-              value: "http://{{ .Values.appName }}-backend-service:8080"
+              value: "http://34.91.87.4:81"
           ports:
             - containerPort :  3000
           volumeMounts:

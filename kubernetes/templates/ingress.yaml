@@ -7,10 +7,12 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: localhost
-    - http:
+  - http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          - serviceName: nginx-cluster-ip-service
-            servicePort: 80
+          service:
+            name: nginx-cluster-ip-service
+            port:
+              number: 80
