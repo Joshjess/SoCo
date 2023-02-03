@@ -6,10 +6,17 @@ metadata:
     type: local
     app: "{{.Values.appName}}-db"
 spec:
-  storageClassName: microk8s-hostpath
+  storageClassName: standard
   capacity:
     storage: {{ .Values.volumeSize }}
   accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: "/opt/postgres/data"
+    - ReadWriteOnce
+  claimRef:
+    namespace: default
+    name: {{ .Values.volumeClaimName }}
+  gcePersistentDisk:
+    pdName: gke-pv
+    fsType: ext4
+
+
+

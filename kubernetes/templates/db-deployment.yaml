@@ -41,6 +41,11 @@ spec:
               configMapKeyRef:
                 name: db-config-map
                 key: postgres-port
+          - name: PGDATA
+            valueFrom:
+              configMapKeyRef:
+                name: db-config-map
+                key: postgres-pgdata
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: {{ .Values.volumeMountName }}

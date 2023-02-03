@@ -5,7 +5,8 @@ metadata:
   labels:
     app: {{ .Values.volumeClaimName }}
 spec:
-  storageClassName: default
+  storageClassName: standard
+  volumeName: {{ .Values.volumeName }}
   accessModes:
     - ReadWriteOnce
   resources:

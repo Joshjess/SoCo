@@ -6,11 +6,13 @@ spec:
   replicas: {{ .Values.backend.replicaCount }}
   selector:
     matchLabels:
+      webapp: gke-lb-backend
       connection-0: db
       connection-1: backend
   template:
     metadata:
       labels:
+        webapp: gke-lb-backend
         connection-0: db
         connection-1: backend
     spec:

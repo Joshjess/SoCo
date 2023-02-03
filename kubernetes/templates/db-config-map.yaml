@@ -6,3 +6,4 @@ data:
   postgres-name: {{ .Values.db.name }}
   postgres-user: {{ .Values.db.user }}
   postgres-port: "{{.Values.db.port }}"
+  postgres-pgdata:  /var/lib/postgresql/data/pgdata
