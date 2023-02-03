@@ -41,32 +41,41 @@ function Posts(posts) {
   
   const [cookies, setCookie] = useCookies(['token'])
 
-  return (
-    <>
-      <h1>Posts</h1>
-      {posts.posts.map((post) => (
-        <Card key={post.id} title={post.title + " from " + post.username} size="small">
-          <p>{post.text}</p>
+  if (posts.posts.length > 0) {
+    return (
+      <>
+        <h1>Posts</h1>
+        {posts.posts.map((post) => (
+          <Card key={post.id} title={post.title + " from " + post.username} size="small">
+            <p>{post.text}</p>
 
-          <Button key={post.id} type="primary" onClick={() => handleLike(post.id, cookies)}>
-            <LikeOutlined />Like
-          </Button>
+            <Button key={post.id} type="primary" onClick={() => handleLike(post.id, cookies)}>
+              <LikeOutlined />Like
+            </Button>
 
-          <Button key={post.id} danger onClick={() => handleDislike(post.id, cookies)}>
-            <DislikeOutlined />Dislike
-          </Button>
+            <Button key={post.id} danger onClick={() => handleDislike(post.id, cookies)}>
+              <DislikeOutlined />Dislike
+            </Button>
 
-          <p>{post.upvote} likes</p>
-          <p>{post.downvote} dislikes</p>
+            <p>{post.upvote} likes</p>
+            <p>{post.downvote} dislikes</p>
 
-          <AddComment post_id={post.id} />
+            <AddComment post_id={post.id} />
 
-          <Comments post_id={post.id} />
+            <Comments post_id={post.id} />
 
-        </Card>
-      ))}
-    </>
-  );
+          </Card>
+        ))}
+      </>
+    );
+  } else {
+    return (
+      <>
+        <h1>Posts</h1>
+        <p>No posts to show</p>
+      </>
+    );
+  }
 };
 
 export default Posts;
