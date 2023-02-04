@@ -1,14 +1,13 @@
-FROM node:alpine
-
+FROM node:16
+# Set the working directory to /app inside the container
 WORKDIR /app
-
-COPY package.json ./
-COPY package-lock.json ./
-
-RUN npm install
-
-COPY ./ ./
-
+# Cache and Install dependencies
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install
+# Copy app files
+COPY . .
+# Expose port
 EXPOSE 3000
-
-CMD ["npm", "start"]
+# Start the app
+CMD [ "yarn", "start" ]
