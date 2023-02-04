@@ -1,0 +1,22 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Values.volumeName }}
+  labels:
+    type: local
+    app: "{{.Values.appName}}-db"
+spec:
+  storageClassName: standard
+  capacity:
+    storage: {{ .Values.volumeSize }}
+  accessModes:
+    - ReadWriteOnce
+  claimRef:
+    namespace: default
+    name: {{ .Values.volumeClaimName }}
+  gcePersistentDisk:
+    pdName: gke-pv
+    fsType: ext4
+
+
+

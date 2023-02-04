@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.appName }}-backend-deployment"
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      webapp: gke-lb-backend
+      connection-0: db
+      connection-1: backend
+  template:
+    metadata:
+      labels:
+        webapp: gke-lb-backend
+        connection-0: db
+        connection-1: backend
+    spec:
+      containers:
+        - name: backend-container
+          image: {{ .Values.backend.image }}
+          env:
+            #TODO:should find a way to assign this dynamic
+            - name: DATABASE_HOST
+              value: "{{ .Values.appName }}-db-service"
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-map
+                  key: postgres-name
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: postgres-password
+            - name: DATABASE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-map
+                  key: postgres-port
+            - name: DATABASE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-map
+                  key: postgres-user
+      restartPolicy: Always
