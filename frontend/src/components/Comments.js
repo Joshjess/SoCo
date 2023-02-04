@@ -18,7 +18,7 @@ function postCommentLike(id, vote, cookie) {
     'Authorization': 'Bearer ' + cookie.token,
   };
 
-  axios.post('${process.env.REACT_APP_BACKEND_URL}/v1/comments/vote', data, {headers: headers})
+  axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/comments/vote`, data, {headers: headers})
   .catch(function (error) {
     console.log(error);
   })

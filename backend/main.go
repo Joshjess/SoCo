@@ -5,6 +5,7 @@ import (
 	CommentRoutes "backend/routes/comment"
 	PostRoutes "backend/routes/post"
 	UserRoutes "backend/routes/user"
+	"net/http"
 
 	// "net/http"
 	"os"
@@ -50,11 +51,11 @@ func main() {
 
 	r := gin.Default()
 
-	// r.GET("/ping", func(c *gin.Context) {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"message": "pong",
-	// 	})
-	// })
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
 	v1 := r.Group("/v1")
 	// v1.Use(CORSMiddleware())
 	{

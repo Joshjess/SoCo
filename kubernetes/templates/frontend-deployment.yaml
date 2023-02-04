@@ -9,14 +9,10 @@ spec:
   selector:
     matchLabels:
       app: frontend
-      connection-1: backend
-      webapp: gke-lb-frontend
   template:
     metadata:
       labels:
-        webapp: gke-lb-frontend
         app: frontend
-        connection-1: backend
     spec:
       containers:
         - name: frontend-container
@@ -24,15 +20,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: REACT_APP_BACKEND_URL
-              value: "http://34.91.87.4:81"
+              value: {{ .Values.backendUrl }}
           ports:
-            - containerPort :  3000
-          volumeMounts:
-            - mountPath: "/app/cert"
-              name: secret-tls
-              readOnly: true      
+            - containerPort :  3000    
       restartPolicy: Always
-      volumes:
-        - name: secret-tls
-          secret: 
-            secretName: secret-tls
