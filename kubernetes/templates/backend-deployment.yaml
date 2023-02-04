@@ -6,13 +6,11 @@ spec:
   replicas: {{ .Values.backend.replicaCount }}
   selector:
     matchLabels:
-      webapp: gke-lb-backend
       connection-0: db
       connection-1: backend
   template:
     metadata:
       labels:
-        webapp: gke-lb-backend
         connection-0: db
         connection-1: backend
     spec:
@@ -20,7 +18,6 @@ spec:
         - name: backend-container
           image: {{ .Values.backend.image }}
           env:
-            #TODO:should find a way to assign this dynamic
             - name: DATABASE_HOST
               value: "{{ .Values.appName }}-db-service"
             - name: DATABASE_NAME
@@ -43,4 +40,12 @@ spec:
                 configMapKeyRef:
                   name: db-config-map
                   key: postgres-user
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+          readinessProbe:
+            httpGet:
+                path: /ping
+                port: 8080
       restartPolicy: Always
