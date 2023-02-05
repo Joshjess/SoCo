@@ -9,27 +9,19 @@ spec:
   selector:
     matchLabels:
       app: frontend
-      connection-1: backend
   template:
     metadata:
       labels:
         app: frontend
-        connection-1: backend
+        version: "2.0"
     spec:
       containers:
         - name: frontend-container
           image: {{ .Values.frontend.image }}
+          imagePullPolicy: Always
           env:
             - name: REACT_APP_BACKEND_URL
-              value: "http://{{ .Values.appName }}-backend-service:8080"
+              value: {{ .Values.backendUrl }}
           ports:
-            - containerPort :  3000
-          volumeMounts:
-            - mountPath: "/app/cert"
-              name: secret-tls
-              readOnly: true      
+            - containerPort :  3000    
       restartPolicy: Always
-      volumes:
-        - name: secret-tls
-          secret: 
-            secretName: secret-tls

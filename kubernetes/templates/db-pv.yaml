@@ -15,7 +15,7 @@ spec:
     namespace: default
     name: {{ .Values.volumeClaimName }}
   gcePersistentDisk:
-    pdName: gke-pv
+    pdName: gke-pv-1
     fsType: ext4
 
 

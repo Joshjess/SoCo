@@ -1,4 +1,0 @@
-Make script that creates a private registry and pushes images to it
-
-jouwwelzijn.nl
-api.jouwwelzijn.nl
